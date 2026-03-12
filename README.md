@@ -449,8 +449,8 @@
         <h1>Brian Muchere</h1>
         <div class="hero-tagline">Full‑stack Software Engineer (Python, PHP, C#, Dart, ML)</div>
         <div class="quick-info">
-            <span><i class="fas fa-map-marker-alt"></i> Mumias, Kenya</span>
-            <span><i class="fas fa-phone-alt"></i> +254 799 737828</span>
+            <span><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</span>
+            <span><i class="fas fa-phone-alt"></i> +254 799 737828 / +254 759 027955</span>
             <span><i class="fas fa-envelope"></i> <a href="mailto:mucherebrian@gmail.com">mucherebrian@gmail.com</a></span>
             <span><i class="fab fa-linkedin"></i> <a href="https://www.linkedin.com/in/brian-muchere/" target="_blank">brian-muchere</a></span>
             <span><i class="fab fa-github"></i> <a href="https://github.com/Brian-2000/" target="_blank">Brian-2000</a></span>
