@@ -100,7 +100,7 @@ section:first-of-type{border-top:none;}
 /* ---------- Hero ---------- */
 .hero{padding:72px 0 60px;border-top:none;}
 .hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:48px;align-items:center;}
-.hero h1{font-size:clamp(2.6rem,6vw,4.4rem);line-height:1.02;margin-bottom:18px;}
+.hero h1{font-size:clamp(1.5rem,3vw,2.0rem);line-height:1.02;margin-bottom:18px;}
 .hero h1 span{color:var(--line-bright);}
 .hero p.lead{font-size:1.12rem;color:var(--ink-soft);max-width:520px;margin-bottom:32px;}
 .btn-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:44px;}
@@ -290,9 +290,13 @@ footer{border-top:1px solid var(--line);padding:32px 0;}
 <section class="hero wrap">
   <div class="hero-grid">
     <div>
-      <div class="eyebrow reveal in">Full-stack engineer · Freelance &amp; contract</div>
-      <h1 class="reveal in">Systems that run <span>pensions, payroll &amp; procurement</span> — built and wired together.</h1>
-      <p class="lead reveal in">I'm Brian Muchere, a Nairobi-based software engineer who designs backend platforms, integrates them with the APIs enterprises already depend on, and ships the frontend people actually use. Five years deep in HR, pension, recruitment and procurement systems for real institutions — backed by hands-on networking and ISP-grade connectivity work, from LAN builds to internet and Wi-Fi installation for homes, offices and organizations.</p>
+      <div class="eyebrow reveal in">Technology Solutions · Software · Connectivity · IT · Training</div>
+        <h1 class="reveal in">Building <span>technology that connects, automates &amp; empowers</span> people and businesses.</h1>
+        <p class="lead reveal in">I'm Brian Muchere, a Nairobi-based Full-Stack Software Engineer and Technology Solutions Specialist with 5+ years of 
+            experience delivering custom software, enterprise and business systems, internet &amp; Wi-Fi solutions, IT hardware and infrastructure, data 
+            &amp; AI solutions, and practical technology training. From powering businesses with reliable connectivity 
+            and digital systems to training the next generation of technology professionals, I turn technology into practical, scalable solutions.
+        </p>
       <div class="btn-row reveal in">
         <a class="btn btn-primary" href="#work">View the work</a>
         <a class="btn btn-ghost" href="mailto:mucherebrian@gmail.com">Start a project →</a>
