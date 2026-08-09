@@ -59,8 +59,8 @@ html[data-theme="light"]{
   --mono:'IBM Plex Mono',monospace;
   --display:'Space Grotesk',sans-serif;
   --body:'Inter',sans-serif;
-  --gutter:clamp(16px, 5vw, 24px);
-  --section-y:clamp(48px, 9vw, 96px);
+  /* --gutter:clamp(16px, 5vw, 24px);
+  --section-y:clamp(48px, 9vw, 96px); */
   /* derived translucent tokens — recompute automatically per theme since
      they reference the theme variables above */
   --paper-90: color-mix(in srgb, var(--paper) 90%, transparent);
