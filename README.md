@@ -1,25 +1,28 @@
-<!--
-  NOTE FOR BRIAN — READ BEFORE YOU EMBED THIS IN README.md:
-  GitHub strips <style> and <script> tags out of README.md files for security reasons.
-  That's the real cause of the "squeezed margins" you're seeing — none of this CSS is
-  actually being applied on github.com, so the browser falls back to plain, unstyled
-  HTML inside GitHub's narrow markdown-body column.
-  Best fix: host this file for free on GitHub Pages (or Vercel/Netlify), then in your
-  README.md just link/embed it, e.g.:
-    ### 🌐 [View my full portfolio →](https://your-username.github.io/portfolio/)
-  That keeps every animation, gradient and the SVG illustration below intact.
--->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brian Muchere — Full-Stack Engineer · Systems Integration · Nairobi</title>
+<script>
+/* Set the theme before first paint so there's no flash of the wrong mode.
+   Dark is the default unless the visitor has already chosen light. */
+(function(){
+  try{
+    var saved = localStorage.getItem('theme');
+    document.documentElement.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
+  }catch(e){
+    document.documentElement.setAttribute('data-theme','dark');
+  }
+})();
+</script>
 <meta name="description" content="Brian Muchere is a full-stack engineer building pension, HR, procurement and ERP systems for enterprise clients. Available for freelance and contract work.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
+/* ================= THEME TOKENS ================= */
+:root,
+html[data-theme="dark"]{
   --paper:#0c1a2b;
   --paper-alt:#122542;
   --panel:#152a49;
@@ -28,32 +31,131 @@
   --amber:#e8a33f;
   --ink:#eef4fb;
   --ink-soft:#93a8c4;
+  --grid-line-color: color-mix(in srgb, var(--line-bright) 20%, transparent);
+  --grid-line-color-soft: color-mix(in srgb, var(--line-bright) 9%, transparent);
+  --grid-glow: color-mix(in srgb, var(--line-bright) 55%, transparent);
+  --grid-fog: var(--paper);
+  --on-accent:#06101c;
+  --accent-hover:#63bcf0;
+}
+html[data-theme="light"]{
+  --paper:#eef2f8;
+  --paper-alt:#ffffff;
+  --panel:#ffffff;
+  --line:#c7d3e3;
+  --line-bright:#0f6fb8;
+  --amber:#9a5b00;
+  --ink:#101d2f;
+  --ink-soft:#51637c;
+  --grid-line-color: color-mix(in srgb, var(--line-bright) 16%, transparent);
+  --grid-line-color-soft: color-mix(in srgb, var(--line-bright) 7%, transparent);
+  --grid-glow: color-mix(in srgb, var(--line-bright) 30%, transparent);
+  --grid-fog: var(--paper);
+  --on-accent:#ffffff;
+  --accent-hover:#0d5c98;
+}
+:root{
   --radius:0px;
   --mono:'IBM Plex Mono',monospace;
   --display:'Space Grotesk',sans-serif;
   --body:'Inter',sans-serif;
-  /* fluid spacing tokens — this is what keeps margins sane on every screen,
-     including narrow embeds like a GitHub README column */
-  /* --gutter:clamp(16px, 5vw, 24px);
-  --section-y:clamp(48px, 9vw, 96px); */
+  --gutter:clamp(16px, 5vw, 24px);
+  --section-y:clamp(48px, 9vw, 96px);
+  /* derived translucent tokens — recompute automatically per theme since
+     they reference the theme variables above */
+  --paper-90: color-mix(in srgb, var(--paper) 90%, transparent);
+  --paper-60: color-mix(in srgb, var(--paper) 60%, transparent);
+  --paper-alt-60: color-mix(in srgb, var(--paper-alt) 60%, transparent);
+  --paper-alt-50: color-mix(in srgb, var(--paper-alt) 50%, transparent);
+  --paper-alt-40: color-mix(in srgb, var(--paper-alt) 40%, transparent);
+  --paper-alt-35: color-mix(in srgb, var(--paper-alt) 35%, transparent);
+  --paper-alt-30: color-mix(in srgb, var(--paper-alt) 30%, transparent);
+  --amber-18: color-mix(in srgb, var(--amber) 18%, transparent);
+  --amber-14: color-mix(in srgb, var(--amber) 14%, transparent);
+  --amber-40: color-mix(in srgb, var(--amber) 40%, transparent);
+  --ink-soft-10: color-mix(in srgb, var(--ink-soft) 10%, transparent);
+  --ink-15: color-mix(in srgb, var(--ink) 15%, transparent);
+  --line-bright-08: color-mix(in srgb, var(--line-bright) 8%, transparent);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{
-  background:
-    linear-gradient(var(--paper),var(--paper)) fixed,
-    repeating-linear-gradient(0deg, rgba(63,169,232,0.045) 0px, rgba(63,169,232,0.045) 1px, transparent 1px, transparent 48px),
-    repeating-linear-gradient(90deg, rgba(63,169,232,0.045) 0px, rgba(63,169,232,0.045) 1px, transparent 1px, transparent 48px),
-    var(--paper);
+  background:var(--paper);
   color:var(--ink);
   font-family:var(--body);
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden; /* guards against any stray element causing horizontal scroll on mobile */
+  overflow-x:hidden;
+  transition:background-color .35s ease, color .35s ease;
 }
 a{color:inherit;}
 img,svg{max-width:100%;display:block;}
 .wrap{max-width:1180px;margin:0 auto;padding:0 var(--gutter);}
+
+/* ================= 3D GRID BACKGROUND ================= */
+.grid-scene{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  overflow:hidden;
+  pointer-events:none;
+  perspective:420px;
+  perspective-origin:50% 46%;
+  background:var(--paper);
+  transition:background-color .35s ease;
+}
+.grid-scene .glow{
+  position:absolute;
+  left:50%;top:46%;
+  width:min(1100px,140vw);
+  height:340px;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(closest-side, var(--grid-glow), transparent 72%);
+  filter:blur(30px);
+  opacity:0.55;
+}
+.grid-scene .plane{
+  position:absolute;
+  left:-60%;right:-60%;
+  height:75vh;
+  background-image:
+    linear-gradient(var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px);
+  background-size:56px 56px;
+  will-change:background-position;
+}
+.grid-scene .plane.floor{
+  top:46%;
+  transform-origin:top center;
+  transform:rotateX(80deg);
+  mask-image:linear-gradient(to bottom, black, transparent 88%);
+  -webkit-mask-image:linear-gradient(to bottom, black, transparent 88%);
+  animation:gridFloorScroll 16s linear infinite;
+}
+.grid-scene .plane.ceiling{
+  bottom:54%;
+  transform-origin:bottom center;
+  transform:rotateX(-80deg);
+  mask-image:linear-gradient(to top, black, transparent 88%);
+  -webkit-mask-image:linear-gradient(to top, black, transparent 88%);
+  background-image:
+    linear-gradient(var(--grid-line-color-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-color-soft) 1px, transparent 1px);
+  animation:gridCeilingScroll 16s linear infinite;
+}
+.grid-scene .vignette{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(120% 90% at 50% 46%, transparent 40%, var(--grid-fog) 96%);
+}
+@keyframes gridFloorScroll{ from{background-position:0 0;} to{background-position:0 56px;} }
+@keyframes gridCeilingScroll{ from{background-position:0 0;} to{background-position:0 -56px;} }
+@media (prefers-reduced-motion: reduce){
+  .grid-scene .plane{animation:none;}
+}
+@media (max-width:720px){
+  .grid-scene{perspective:300px;}
+}
 .eyebrow{
   font-family:var(--mono);
   font-size:0.72rem;
@@ -70,7 +172,6 @@ h2.section-title{font-size:clamp(1.5rem,3vw,2.3rem);margin-bottom:10px;}
 section{padding:var(--section-y) 0;position:relative;border-top:1px solid var(--line);}
 section:first-of-type{border-top:none;}
 
-/* ---------- Title block (signature component) ---------- */
 .title-block{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
@@ -79,7 +180,7 @@ section:first-of-type{border-top:none;}
   overflow:hidden;
   font-family:var(--mono);
   font-size:0.72rem;
-  background:rgba(18,37,66,0.6);
+  background:var(--paper-alt-60);
 }
 .title-block > div{
   padding:12px 16px;
@@ -91,10 +192,9 @@ section:first-of-type{border-top:none;}
 .title-block dt{color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.08em;font-size:0.65rem;margin-bottom:4px;}
 .title-block dd{color:var(--ink);font-weight:500;word-break:break-word;}
 
-/* ---------- Nav ---------- */
 .nav{
   position:sticky;top:0;z-index:100;
-  background:rgba(12,26,43,0.9);
+  background:var(--paper-90);
   backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line);
 }
@@ -104,7 +204,7 @@ section:first-of-type{border-top:none;}
   gap:12px;
 }
 .nav-brand{font-family:var(--mono);font-size:0.82rem;letter-spacing:0.05em;display:flex;align-items:center;gap:8px;white-space:nowrap;}
-.nav-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 3px rgba(232,163,63,0.18);flex-shrink:0;}
+.nav-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 3px var(--amber-18);flex-shrink:0;}
 .nav-links{display:flex;gap:24px;list-style:none;font-family:var(--mono);font-size:0.75rem;letter-spacing:0.04em;text-transform:uppercase;flex-wrap:wrap;}
 .nav-links a{text-decoration:none;color:var(--ink-soft);transition:color .2s;padding:4px 0;border-bottom:1px solid transparent;}
 .nav-links a:hover, .nav-links a.active{color:var(--line-bright);border-color:var(--line-bright);}
@@ -116,7 +216,25 @@ section:first-of-type{border-top:none;}
 .nav-cta:hover{background:var(--amber);color:var(--paper);}
 .nav-toggle{display:none;background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 10px;font-size:1rem;line-height:1;cursor:pointer;}
 
-/* ---------- Hero ---------- */
+.theme-toggle{
+  flex-shrink:0;
+  width:36px;height:36px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:var(--paper-alt-40);
+  color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:border-color .2s, color .2s, transform .2s;
+}
+.theme-toggle:hover{border-color:var(--line-bright);color:var(--line-bright);}
+.theme-toggle:active{transform:scale(0.92);}
+.theme-toggle svg{width:17px;height:17px;}
+.theme-toggle .icon-sun{display:none;}
+.theme-toggle .icon-moon{display:block;}
+html[data-theme="light"] .theme-toggle .icon-sun{display:block;}
+html[data-theme="light"] .theme-toggle .icon-moon{display:none;}
+
 .hero{padding:clamp(40px,8vw,72px) 0 clamp(36px,6vw,60px);border-top:none;}
 .hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:clamp(28px,5vw,48px);align-items:center;}
 .hero h1{font-size:clamp(1.5rem,4vw,2.1rem);line-height:1.15;margin-bottom:18px;}
@@ -127,15 +245,11 @@ section:first-of-type{border-top:none;}
   font-family:var(--mono);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;
   padding:13px 24px;border-radius:30px;text-decoration:none;transition:.2s;display:inline-flex;align-items:center;gap:8px;
 }
-.btn-primary{background:var(--line-bright);color:#06101c;font-weight:600;}
-.btn-primary:hover{background:#63bcf0;}
+.btn-primary{background:var(--line-bright);color:var(--on-accent);font-weight:600;}
+.btn-primary:hover{background:var(--accent-hover);}
 .btn-ghost{border:1px solid var(--line);color:var(--ink);}
 .btn-ghost:hover{border-color:var(--line-bright);color:var(--line-bright);}
 
-/* hero services wheel — a self-contained inline SVG (no external image file,
-   no extra folder, nothing to host). Six services orbit a central hub, each
-   with its own hand-drawn icon. Numbering 01–06 mirrors the same order used
-   in the Services section below, so it's a real index, not decoration. */
 .hero-art{position:relative;width:100%;max-width:440px;margin:0 auto;}
 .hero-wheel svg{width:100%;height:auto;}
 .wheel-orbit{
@@ -153,7 +267,6 @@ section:first-of-type{border-top:none;}
   *{scroll-behavior:auto !important;}
 }
 
-/* ---------- About stats ---------- */
 .about-grid{
   display:grid;
   grid-template-columns:1.2fr 0.8fr;
@@ -162,13 +275,12 @@ section:first-of-type{border-top:none;}
 }
 .about-grid p{color:var(--ink-soft);margin-bottom:16px;max-width:600px;}
 .stat-list{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.stat-card{border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:rgba(18,37,66,0.4);}
+.stat-card{border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:var(--paper-alt-40);}
 .stat-card .num{font-family:var(--display);font-size:1.8rem;color:var(--line-bright);}
 .stat-card .lbl{font-family:var(--mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-soft);margin-top:4px;}
 
-/* ---------- Services ---------- */
 .svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;}
-.svc-card{border:1px solid var(--line);border-radius:var(--radius);padding:24px;background:rgba(18,37,66,0.35);transition:.2s;}
+.svc-card{border:1px solid var(--line);border-radius:var(--radius);padding:24px;background:var(--paper-alt-35);transition:.2s;}
 .svc-card:hover{border-color:var(--line-bright);transform:translateY(-3px);}
 .svc-card .idx{font-family:var(--mono);color:var(--amber);font-size:0.75rem;margin-bottom:10px;}
 .svc-card h3{font-size:1.05rem;margin-bottom:10px;}
@@ -176,9 +288,8 @@ section:first-of-type{border-top:none;}
 .svc-card li{padding-left:16px;position:relative;margin-bottom:6px;}
 .svc-card li::before{content:"—";position:absolute;left:0;color:var(--line);}
 
-/* ---------- Skills ---------- */
 .skill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
-.skill-card{border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:rgba(18,37,66,0.3);}
+.skill-card{border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:var(--paper-alt-30);}
 .skill-card h4{font-size:0.95rem;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--ink);}
 .skill-card h4 .sw{width:6px;height:6px;background:var(--line-bright);border-radius:1px;transform:rotate(45deg);display:inline-block;flex-shrink:0;}
 .tagset{display:flex;flex-wrap:wrap;gap:6px;}
@@ -187,7 +298,6 @@ section:first-of-type{border-top:none;}
   border:1px solid var(--line);padding:4px 10px;border-radius:20px;
 }
 
-/* ---------- Experience timeline ---------- */
 .timeline{position:relative;padding-left:28px;}
 .timeline::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--line);}
 .tl-item{position:relative;padding-bottom:40px;}
@@ -204,9 +314,8 @@ section:first-of-type{border-top:none;}
 .tl-item li{padding-left:18px;position:relative;margin-bottom:6px;}
 .tl-item li::before{content:"›";position:absolute;left:0;color:var(--line-bright);}
 
-/* ---------- Projects ---------- */
 .proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
-.proj-card{border:1px solid var(--line);border-radius:var(--radius);background:rgba(18,37,66,0.35);overflow:hidden;display:flex;flex-direction:column;transition:.2s;}
+.proj-card{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper-alt-35);overflow:hidden;display:flex;flex-direction:column;transition:.2s;}
 .proj-card:hover{border-color:var(--line-bright);transform:translateY(-3px);}
 .proj-top{padding:22px 22px 0;flex:1;}
 .proj-top h3{font-size:1.08rem;margin-bottom:8px;}
@@ -221,11 +330,10 @@ section:first-of-type{border-top:none;}
 .proj-foot dt{color:var(--ink-soft);}
 .proj-foot dd{color:var(--ink);margin-top:2px;}
 
-/* ---------- Client work (live freelance sites) ---------- */
 .client-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;}
 .client-card{
   border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
-  background:rgba(18,37,66,0.35);transition:.2s;display:flex;flex-direction:column;
+  background:var(--paper-alt-35);transition:.2s;display:flex;flex-direction:column;
 }
 .client-card:hover{border-color:var(--line-bright);transform:translateY(-3px);}
 .browser-frame{background:var(--paper-alt);border-bottom:1px solid var(--line);}
@@ -234,14 +342,14 @@ section:first-of-type{border-top:none;}
 .browser-dots span{width:8px;height:8px;border-radius:50%;background:var(--line);display:inline-block;}
 .browser-url{
   font-family:var(--mono);font-size:0.68rem;color:var(--ink-soft);
-  background:rgba(12,26,43,0.6);border:1px solid var(--line);border-radius:20px;
+  background:var(--paper-60);border:1px solid var(--line);border-radius:20px;
   padding:3px 12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .browser-preview{
   height:110px;position:relative;overflow:hidden;
   display:flex;align-items:center;justify-content:center;
 }
-.browser-preview .glyph{font-family:var(--display);font-size:2.2rem;color:rgba(238,244,251,0.15);letter-spacing:0.02em;}
+.browser-preview .glyph{font-family:var(--display);font-size:2.2rem;color:var(--ink-15);letter-spacing:0.02em;}
 .client-top{padding:20px 22px;flex:1;}
 .client-top h3{font-size:1.02rem;margin-bottom:6px;}
 .client-top p{color:var(--ink-soft);font-size:0.86rem;margin-bottom:12px;}
@@ -253,12 +361,11 @@ section:first-of-type{border-top:none;}
 }
 .client-foot a:hover{text-decoration:underline;}
 
-/* ---------- Case study ---------- */
 .case{
   border:1px solid var(--line-bright);
   border-radius:18px;
   padding:clamp(24px,5vw,44px);
-  background:linear-gradient(160deg,rgba(63,169,232,0.08),rgba(18,37,66,0.5));
+  background:linear-gradient(160deg,var(--line-bright-08),var(--paper-alt-50));
   position:relative;
 }
 .case::before, .case::after{
@@ -276,26 +383,23 @@ section:first-of-type{border-top:none;}
 .pillar-list li:last-child{border-bottom:none;}
 .pillar-list b{color:var(--ink);font-weight:500;}
 .req-tag{font-family:var(--mono);font-size:0.62rem;text-transform:uppercase;padding:2px 8px;border-radius:10px;white-space:nowrap;height:fit-content;}
-.req-mandatory{background:rgba(232,163,63,0.14);color:var(--amber);border:1px solid rgba(232,163,63,0.4);}
-.req-optional{background:rgba(147,168,196,0.1);color:var(--ink-soft);border:1px solid var(--line);}
+.req-mandatory{background:var(--amber-14);color:var(--amber);border:1px solid var(--amber-40);}
+.req-optional{background:var(--ink-soft-10);color:var(--ink-soft);border:1px solid var(--line);}
 
-/* ---------- Education ---------- */
 .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.edu-card{border:1px solid var(--line);border-radius:var(--radius);padding:22px;background:rgba(18,37,66,0.3);}
+.edu-card{border:1px solid var(--line);border-radius:var(--radius);padding:22px;background:var(--paper-alt-30);}
 .edu-card .k{font-family:var(--mono);font-size:0.68rem;color:var(--line-bright);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
 .edu-card h4{font-size:1rem;margin-bottom:4px;}
 .edu-card .org{color:var(--ink-soft);font-size:0.86rem;margin-bottom:10px;}
 .edu-card .date{font-family:var(--mono);font-size:0.72rem;color:var(--amber);}
 
-/* ---------- Referees ---------- */
 .ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
-.ref-card{border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:rgba(18,37,66,0.3);}
+.ref-card{border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:var(--paper-alt-30);}
 .ref-card h4{font-size:1rem;margin-bottom:4px;}
 .ref-card .role{color:var(--line-bright);font-size:0.82rem;margin-bottom:10px;}
 .ref-card .org{color:var(--ink-soft);font-size:0.82rem;}
 .ref-note{font-family:var(--mono);font-size:0.78rem;color:var(--ink-soft);margin-top:24px;}
 
-/* ---------- Footer / contact ---------- */
 .contact{text-align:center;}
 .contact h2{font-size:clamp(1.7rem,5vw,3rem);max-width:700px;margin:0 auto 20px;}
 .contact p{color:var(--ink-soft);max-width:520px;margin:0 auto 32px;}
@@ -305,12 +409,9 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
 .foot-inner a{color:var(--ink-soft);text-decoration:none;}
 .foot-inner a:hover{color:var(--line-bright);}
 
-/* ---------- Reveal animation ---------- */
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
 .reveal.in{opacity:1;transform:translateY(0);}
 
-/* ================= RESPONSIVE ================= */
-/* Tablet / narrow-desktop */
 @media (max-width:900px){
   .hero-grid{grid-template-columns:1fr;}
   .hero-art{order:-1;max-width:320px;}
@@ -318,7 +419,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
   .case-cols{grid-template-columns:1fr;}
   .edu-grid{grid-template-columns:1fr;}
 }
-/* Phones */
 @media (max-width:720px){
   .nav-links, .nav-cta{display:none;}
   .nav-toggle{display:block;}
@@ -333,7 +433,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
   .contact-links{flex-direction:column;align-items:stretch;}
   .contact-links .btn{justify-content:center;}
 }
-/* Very small phones */
 @media (max-width:400px){
   .stat-list, .title-block{grid-template-columns:1fr;}
   .btn-row{flex-direction:column;align-items:stretch;}
@@ -349,7 +448,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
 
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <!-- <div class="nav-brand"><span class="dot"></span> BRIAN MUCHERE</div> -->
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#services">Services</a></li>
@@ -361,11 +459,21 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
       <li><a href="#credentials">Credentials</a></li>
     </ul>
     <a class="nav-cta" href="mailto:mucherebrian@gmail.com">Start a project</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Switch to light mode" aria-pressed="false">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+    </button>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
   </div>
 </nav>
 
-<!-- HERO -->
+<div class="grid-scene" aria-hidden="true">
+  <div class="glow"></div>
+  <div class="plane ceiling"></div>
+  <div class="plane floor"></div>
+  <div class="vignette"></div>
+</div>
+
 <section class="hero wrap">
   <div class="hero-grid">
     <div>
@@ -388,24 +496,20 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
       </dl>
     </div>
 
-    <!-- Hero visual: the six services as a circular diagram, drawn entirely
-         as inline SVG. No image file, no external link, nothing to host —
-         it's just markup, so it survives copy/paste into a README exactly
-         as well as it renders here. -->
     <div class="hero-art reveal in hero-wheel" aria-hidden="true">
       <svg viewBox="0 0 520 580" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0" y="0" width="520" height="580" fill="#0c1a2b"/>
+        <rect x="0" y="0" width="520" height="580" fill="var(--paper)"/>
 
-        <g stroke="#24405f" stroke-width="1" opacity="0.35">
+        <g stroke="var(--line)" stroke-width="1" opacity="0.35">
           <line x1="0" y1="90" x2="520" y2="90"/>
           <line x1="0" y1="470" x2="520" y2="470"/>
           <line x1="95" y1="0" x2="95" y2="580"/>
           <line x1="425" y1="0" x2="425" y2="580"/>
         </g>
 
-        <circle class="wheel-orbit" cx="260" cy="280" r="190" fill="none" stroke="#24405f" stroke-width="1.4" stroke-dasharray="3 7" opacity="0.6"/>
+        <circle class="wheel-orbit" cx="260" cy="280" r="190" fill="none" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3 7" opacity="0.6"/>
 
-        <g stroke="#3fa9e8" stroke-width="1.6" opacity="0.55">
+        <g stroke="var(--line-bright)" stroke-width="1.6" opacity="0.55">
           <line x1="260" y1="280" x2="260" y2="90"/>
           <line x1="260" y1="280" x2="425" y2="185"/>
           <line x1="260" y1="280" x2="425" y2="375"/>
@@ -414,101 +518,93 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
           <line x1="260" y1="280" x2="95" y2="185"/>
         </g>
 
-        <!-- 01 Custom Software -->
         <g transform="translate(260,90)">
-          <circle r="54" fill="#152a49" stroke="#3fa9e8" stroke-width="1.6"/>
-          <text y="-70" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="#e8a33f">01</text>
-          <g stroke="#eef4fb" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <circle r="54" fill="var(--panel)" stroke="var(--line-bright)" stroke-width="1.6"/>
+          <text y="-70" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="var(--amber)">01</text>
+          <g stroke="var(--ink)" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path d="M-8,-11 L-17,0 L-8,11"/>
             <path d="M8,-11 L17,0 L8,11"/>
             <path d="M3,-13 L-3,13"/>
           </g>
-          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="#eef4fb">Custom Software</text>
+          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="var(--ink)">Custom Software</text>
         </g>
 
-        <!-- 02 Enterprise Systems -->
         <g transform="translate(425,185)">
-          <circle r="54" fill="#152a49" stroke="#3fa9e8" stroke-width="1.6"/>
-          <text x="30" y="-58" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="#e8a33f">02</text>
+          <circle r="54" fill="var(--panel)" stroke="var(--line-bright)" stroke-width="1.6"/>
+          <text x="30" y="-58" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="var(--amber)">02</text>
           <g>
-            <rect x="-13" y="-16" width="26" height="32" rx="2" fill="none" stroke="#eef4fb" stroke-width="2.1"/>
-            <rect x="-9" y="-11" width="5" height="5" fill="#eef4fb"/>
-            <rect x="1" y="-11" width="5" height="5" fill="#eef4fb"/>
-            <rect x="-9" y="-2" width="5" height="5" fill="#eef4fb"/>
-            <rect x="1" y="-2" width="5" height="5" fill="#eef4fb"/>
-            <rect x="-4" y="8" width="8" height="8" fill="#eef4fb"/>
+            <rect x="-13" y="-16" width="26" height="32" rx="2" fill="none" stroke="var(--ink)" stroke-width="2.1"/>
+            <rect x="-9" y="-11" width="5" height="5" fill="var(--ink)"/>
+            <rect x="1" y="-11" width="5" height="5" fill="var(--ink)"/>
+            <rect x="-9" y="-2" width="5" height="5" fill="var(--ink)"/>
+            <rect x="1" y="-2" width="5" height="5" fill="var(--ink)"/>
+            <rect x="-4" y="8" width="8" height="8" fill="var(--ink)"/>
           </g>
-          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="#eef4fb">Enterprise</text>
-          <text y="102" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="#eef4fb">Systems</text>
+          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="var(--ink)">Enterprise</text>
+          <text y="102" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="var(--ink)">Systems</text>
         </g>
 
-        <!-- 03 Sector Solutions -->
         <g transform="translate(425,375)">
-          <circle r="54" fill="#152a49" stroke="#3fa9e8" stroke-width="1.6"/>
-          <text x="30" y="-58" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="#e8a33f">03</text>
-          <g fill="#eef4fb">
+          <circle r="54" fill="var(--panel)" stroke="var(--line-bright)" stroke-width="1.6"/>
+          <text x="30" y="-58" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="var(--amber)">03</text>
+          <g fill="var(--ink)">
             <rect x="-14" y="-14" width="11" height="11" rx="2"/>
             <rect x="3" y="-14" width="11" height="11" rx="2"/>
             <rect x="-14" y="3" width="11" height="11" rx="2"/>
             <rect x="3" y="3" width="11" height="11" rx="2"/>
           </g>
-          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="#eef4fb">Sector</text>
-          <text y="102" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="#eef4fb">Solutions</text>
+          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="var(--ink)">Sector</text>
+          <text y="102" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="var(--ink)">Solutions</text>
         </g>
 
-        <!-- 04 Data & AI -->
         <g transform="translate(260,470)">
-          <circle r="54" fill="#152a49" stroke="#3fa9e8" stroke-width="1.6"/>
-          <text y="-70" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="#e8a33f">04</text>
-          <g stroke="#eef4fb" stroke-width="2.1">
+          <circle r="54" fill="var(--panel)" stroke="var(--line-bright)" stroke-width="1.6"/>
+          <text y="-70" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="var(--amber)">04</text>
+          <g stroke="var(--ink)" stroke-width="2.1">
             <line x1="0" y1="-14" x2="-12" y2="10"/>
             <line x1="0" y1="-14" x2="12" y2="10"/>
             <line x1="-12" y1="10" x2="12" y2="10"/>
           </g>
-          <g fill="#eef4fb">
+          <g fill="var(--ink)">
             <circle cx="0" cy="-14" r="3.4"/>
             <circle cx="-12" cy="10" r="3.4"/>
             <circle cx="12" cy="10" r="3.4"/>
           </g>
-          <circle cx="0" cy="1" r="3" fill="none" stroke="#e8a33f" stroke-width="2"/>
-          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="#eef4fb">Data &amp; AI</text>
+          <circle cx="0" cy="1" r="3" fill="none" stroke="var(--amber)" stroke-width="2"/>
+          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="var(--ink)">Data &amp; AI</text>
         </g>
 
-        <!-- 05 Infrastructure -->
         <g transform="translate(95,375)">
-          <circle r="54" fill="#152a49" stroke="#3fa9e8" stroke-width="1.6"/>
-          <text x="-30" y="-58" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="#e8a33f">05</text>
-          <g stroke="#eef4fb" stroke-width="2.4" fill="none" stroke-linecap="round">
+          <circle r="54" fill="var(--panel)" stroke="var(--line-bright)" stroke-width="1.6"/>
+          <text x="-30" y="-58" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="var(--amber)">05</text>
+          <g stroke="var(--ink)" stroke-width="2.4" fill="none" stroke-linecap="round">
             <path d="M-15,-3 a21,21 0 0 1 30,0"/>
             <path d="M-9,5 a12,12 0 0 1 18,0"/>
           </g>
-          <circle cx="0" cy="13" r="2.6" fill="#eef4fb"/>
-          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="#eef4fb">Infrastructure</text>
+          <circle cx="0" cy="13" r="2.6" fill="var(--ink)"/>
+          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="var(--ink)">Infrastructure</text>
         </g>
 
-        <!-- 06 Tech Training -->
         <g transform="translate(95,185)">
-          <circle r="54" fill="#152a49" stroke="#3fa9e8" stroke-width="1.6"/>
-          <text x="-30" y="-58" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="#e8a33f">06</text>
-          <path d="M-16,-4 L0,-12 L16,-4 L0,4 Z" fill="#0c1a2b" stroke="#eef4fb" stroke-width="2" stroke-linejoin="round"/>
-          <path d="M-8,0 L-8,8 Q0,14 8,8 L8,0" fill="none" stroke="#eef4fb" stroke-width="2" stroke-linecap="round"/>
-          <line x1="12" y1="-2" x2="12" y2="9" stroke="#eef4fb" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="12" cy="10" r="1.8" fill="#e8a33f"/>
-          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="#eef4fb">Tech Training</text>
+          <circle r="54" fill="var(--panel)" stroke="var(--line-bright)" stroke-width="1.6"/>
+          <text x="-30" y="-58" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" letter-spacing="1" fill="var(--amber)">06</text>
+          <path d="M-16,-4 L0,-12 L16,-4 L0,4 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M-8,0 L-8,8 Q0,14 8,8 L8,0" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="12" y1="-2" x2="12" y2="9" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="10" r="1.8" fill="var(--amber)"/>
+          <text y="86" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="13.5" letter-spacing="0.5" fill="var(--ink)">Tech Training</text>
         </g>
 
-        <!-- hub -->
-        <circle cx="260" cy="280" r="70" fill="#122542" stroke="#e8a33f" stroke-width="1.8"/>
-        <circle class="wheel-orbit" cx="260" cy="280" r="58" fill="none" stroke="#e8a33f" stroke-width="1" stroke-dasharray="2 5" opacity="0.6"/>
-        <text x="260" y="272" text-anchor="middle" font-family="'Space Grotesk','Segoe UI',sans-serif" font-size="17" font-weight="600" fill="#eef4fb">BRIAN</text>
-        <text x="260" y="289" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="9.5" letter-spacing="1.5" fill="#93a8c4">6 CORE SERVICES</text>
+        <circle cx="260" cy="280" r="70" fill="var(--paper-alt)" stroke="var(--amber)" stroke-width="1.8"/>
+        <circle class="wheel-orbit" cx="260" cy="280" r="58" fill="none" stroke="var(--amber)" stroke-width="1" stroke-dasharray="2 5" opacity="0.6"/>
+        <text x="260" y="272" text-anchor="middle" font-family="'Space Grotesk','Segoe UI',sans-serif" font-size="17" font-weight="600" fill="var(--ink)">BRIAN</text>
+        <text x="260" y="289" text-anchor="middle" font-family="'IBM Plex Mono','Courier New',monospace" font-size="9.5" letter-spacing="1.5" fill="var(--ink-soft)">6 CORE SERVICES</text>
       </svg>
       <p class="illus-caption">// six services, one core</p>
     </div>
   </div>
 </section>
 
-<!-- ABOUT -->
 <section id="about" class="wrap section-h">
   <div class="eyebrow reveal">About</div>
   <div class="about-grid">
@@ -527,7 +623,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
   </div>
 </section>
 
-<!-- SERVICES -->
 <section id="services" class="wrap section-h">
   <div class="eyebrow reveal section-h">Freelance services</div>
   <h2 class="section-title reveal">Work with me on your next build</h2>
@@ -596,7 +691,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
   </div>
 </section>
 
-<!-- SKILLS -->
 <section id="skills" class="wrap section-h">
   <div class="eyebrow reveal section-h">Technical skills</div>
   <h2 class="section-title reveal">The stack, in full</h2>
@@ -613,7 +707,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
   </div>
 </section>
 
-<!-- EXPERIENCE -->
 <section id="experience" class="wrap section-h">
   <div class="eyebrow reveal section-h">Experience</div>
   <h2 class="section-title reveal">Where the stack got built</h2>
@@ -656,7 +749,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
   </div>
 </section>
 
-<!-- PROJECTS -->
 <section id="work" class="wrap section-h">
   <div class="eyebrow reveal section-h">Selected work</div>
   <h2 class="section-title reveal">Systems in production</h2>
@@ -720,7 +812,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
   </div>
 </section>
 
-<!-- CLIENT WORK -->
 <section id="clients" class="wrap section-h">
   <div class="eyebrow reveal section-h">Freelance client work</div>
   <h2 class="section-title reveal">Live sites I've built &amp; shipped</h2>
@@ -733,7 +824,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
           <div class="browser-dots"><span></span><span></span><span></span></div>
           <div class="browser-url">defttech.co.ke</div>
         </div>
-        <!-- <div class="browser-preview"><span class="glyph">Deft</span></div> -->
       </div>
       <div class="client-top">
         <h3>Deft</h3>
@@ -749,7 +839,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
           <div class="browser-dots"><span></span><span></span><span></span></div>
           <div class="browser-url">noted.co.ke</div>
         </div>
-        <!-- <div class="browser-preview"><span class="glyph">Noted</span></div> -->
       </div>
       <div class="client-top">
         <h3>Noted</h3>
@@ -765,7 +854,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
           <div class="browser-dots"><span></span><span></span><span></span></div>
           <div class="browser-url">serenehomecare.co.ke</div>
         </div>
-        <!-- <div class="browser-preview"><span class="glyph">Serene</span></div> -->
       </div>
       <div class="client-top">
         <h3>Serene Home Care</h3>
@@ -781,7 +869,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
           <div class="browser-dots"><span></span><span></span><span></span></div>
           <div class="browser-url">infrasoft.co.ke</div>
         </div>
-        <!-- <div class="browser-preview"><span class="glyph">Infrasoft</span></div> -->
       </div>
       <div class="client-top">
         <h3>Infrasoft</h3>
@@ -797,7 +884,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
           <div class="browser-dots"><span></span><span></span><span></span></div>
           <div class="browser-url">nestapetroleum.com</div>
         </div>
-        <!-- <div class="browser-preview"><span class="glyph">Nesta</span></div> -->
       </div>
       <div class="client-top">
         <h3>Nesta Petroleum</h3>
@@ -810,7 +896,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
   </div>
 </section>
 
-<!-- CASE STUDY -->
 <section id="case-study" class="wrap section-h">
   <div class="eyebrow reveal section-h">Case study</div>
   <div class="case reveal">
@@ -849,7 +934,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
   </div>
 </section>
 
-<!-- EDUCATION / CREDENTIALS -->
 <section id="credentials" class="wrap section-h">
   <div class="eyebrow reveal section-h">Credentials</div>
   <h2 class="section-title reveal">Education &amp; certifications</h2>
@@ -887,7 +971,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
   </div>
 </section>
 
-<!-- REFEREES -->
 <section id="referees" class="wrap section-h">
   <div class="eyebrow reveal section-h">References</div>
   <h2 class="section-title reveal">People who've worked with me</h2>
@@ -911,7 +994,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
   <p class="ref-note">Full contact details provided on request.</p>
 </section>
 
-<!-- CONTACT -->
 <section id="contact" class="wrap contact section-h">
   <div class="eyebrow reveal section-h" style="justify-content:center;">Get in touch</div>
   <h2 class="reveal">Have a system that needs building — or fixing?</h2>
@@ -934,19 +1016,30 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// mobile nav toggle
 const nav = document.getElementById('nav');
 document.getElementById('navToggle').addEventListener('click', () => nav.classList.toggle('open'));
 nav.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
 
-// scroll reveal
+/* Theme toggle */
+const themeToggle = document.getElementById('themeToggle');
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  try{ localStorage.setItem('theme', theme); }catch(e){}
+  themeToggle.setAttribute('aria-pressed', theme === 'light');
+  themeToggle.setAttribute('aria-label', theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+}
+themeToggle.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+applyTheme(document.documentElement.getAttribute('data-theme'));
+
 const revealEls = document.querySelectorAll('.reveal');
 const io = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
 }, { threshold: 0.12 });
 revealEls.forEach(el => io.observe(el));
 
-// active nav link on scroll
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.nav-links a');
 const spy = new IntersectionObserver((entries) => {
