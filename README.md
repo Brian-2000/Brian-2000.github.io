@@ -34,8 +34,8 @@
   --body:'Inter',sans-serif;
   /* fluid spacing tokens — this is what keeps margins sane on every screen,
      including narrow embeds like a GitHub README column */
-  --gutter:clamp(16px, 5vw, 24px);
-  --section-y:clamp(48px, 9vw, 96px);
+  /* --gutter:clamp(16px, 5vw, 24px);
+  --section-y:clamp(48px, 9vw, 96px); */
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -154,7 +154,12 @@ section:first-of-type{border-top:none;}
 }
 
 /* ---------- About stats ---------- */
-.about-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:clamp(28px,5vw,56px);align-items:start;}
+.about-grid{
+  display:grid;
+  grid-template-columns:1.2fr 0.8fr;
+  gap:clamp(28px,5vw,56px);
+  align-items:start;
+}
 .about-grid p{color:var(--ink-soft);margin-bottom:16px;max-width:600px;}
 .stat-list{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .stat-card{border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:rgba(18,37,66,0.4);}
@@ -344,7 +349,7 @@ footer{border-top:1px solid var(--line);padding:28px 0;}
 
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <div class="nav-brand"><span class="dot"></span> BRIAN MUCHERE</div>
+    <!-- <div class="nav-brand"><span class="dot"></span> BRIAN MUCHERE</div> -->
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#services">Services</a></li>
